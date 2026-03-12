@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ocean Teal Palette */
+    --background: 171 77% 99%;
+    --foreground: 173 84% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 173 84% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 173 84% 10%;
+    --primary: 173 84% 31%;
+    --primary-foreground: 171 77% 96%;
+    --secondary: 171 77% 96%;
+    --secondary-foreground: 173 84% 20%;
+    --muted: 171 20% 96%;
+    --muted-foreground: 173 40% 40%;
+    --accent: 173 84% 31%;
+    --accent-foreground: 171 77% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 173 30% 90%;
+    --input: 173 30% 90%;
+    --ring: 173 84% 31%;
+
+    /* Fonts */
+    --font-sans: 'Inter', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.1);
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 173 84% 4%;
+    --foreground: 171 77% 96%;
+    --card: 173 84% 6%;
+    --card-foreground: 171 77% 96%;
+    --popover: 173 84% 6%;
+    --popover-foreground: 171 77% 96%;
+    --primary: 173 84% 31%;
+    --primary-foreground: 171 77% 96%;
+    --secondary: 173 84% 10%;
+    --secondary-foreground: 171 77% 96%;
+    --muted: 173 84% 10%;
+    --muted-foreground: 171 40% 70%;
+    --accent: 173 84% 31%;
+    --accent-foreground: 171 77% 96%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 171 77% 96%;
+    --border: 173 84% 15%;
+    --input: 173 84% 15%;
+    --ring: 173 84% 31%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    letter-spacing: var(--tracking-normal);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

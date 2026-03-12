@@ -184,18 +184,19 @@ export default function Profile() {
                       </div>
                       <p className="text-sm font-bold">Upload PDFs</p>
                     </div>
-                    <div className="p-4 bg-background rounded-2xl border border-primary/10 shadow-sm flex flex-col items-center text-center space-y-3">
+                    <div className="p-4 bg-background rounded-2xl border border-primary/10 shadow-sm flex flex-col items-center text-center space-y-3 opacity-50 grayscale">
                       <div className="bg-primary/10 p-2.5 rounded-full">
                         <PlayCircle className="h-5 w-5 text-primary" />
                       </div>
                       <p className="text-sm font-bold">Share Videos</p>
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground">Admin Only</p>
                     </div>
                   </div>
                   <AddMaterialDialog
                     isUserContribution={true}
                     trigger={
                       <Button className="w-full h-14 rounded-full bg-primary shadow-elegant hover:scale-105 transition-all text-lg font-bold">
-                        Add New Resource <ChevronRight className="ml-2 h-5 w-5" />
+                        Add Document <ChevronRight className="ml-2 h-5 w-5" />
                       </Button>
                     }
                   />

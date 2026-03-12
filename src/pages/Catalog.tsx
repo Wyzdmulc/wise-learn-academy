@@ -9,9 +9,12 @@ import {
   Loader2,
   X,
   Maximize2,
-  Download
+  Download,
+  Plus,
+  ArrowUpCircle
 } from 'lucide-react'
 import { useMaterials } from '@/hooks/useMaterials'
+import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -38,11 +41,13 @@ import {
   SelectValue 
 } from '@/components/ui/select'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import { AddMaterialDialog } from '@/components/materials/AddMaterialDialog'
 
 type MaterialType = 'document' | 'video' | 'link'
 
 export default function Catalog() {
   const { materials, isLoading } = useMaterials()
+  const { isEnriched, isAdmin } = useAuth()
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<MaterialType | 'all'>('all')
   const [selectedMaterial, setSelectedMaterial] = useState<any>(null)
@@ -81,6 +86,18 @@ export default function Catalog() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            {isEnriched && !isAdmin && (
+              <AddMaterialDialog
+                isUserContribution={true}
+                trigger={
+                  <Button className="rounded-full shadow-elegant bg-primary hover:bg-primary/90">
+                    <ArrowUpCircle className="mr-2 h-4 w-4" />
+                    Enrich Library
+                  </Button>
+                }
+              />
+            )}
+            
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 

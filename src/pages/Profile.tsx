@@ -10,7 +10,9 @@ import {
   History,
   FileUp,
   ChevronRight,
-  GraduationCap
+  GraduationCap,
+  Zap,
+  PlayCircle
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
@@ -26,6 +28,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
+import { AddMaterialDialog } from '@/components/materials/AddMaterialDialog'
 
 export default function Profile() {
   const { user, isEnriched, isAdmin } = useAuth()
@@ -170,7 +173,7 @@ export default function Profile() {
                   </div>
                   <CardTitle className="text-2xl font-serif font-bold">Share Your Wisdom</CardTitle>
                   <CardDescription className="text-primary/70 font-medium">
-                    Because you've been with us for over 10 days, you can now contribute materials to the academy!
+                    Because you've been with us for over 10 days, you can now contribute documents to the academy!
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 max-w-lg">
@@ -188,9 +191,14 @@ export default function Profile() {
                       <p className="text-sm font-bold">Share Videos</p>
                     </div>
                   </div>
-                  <Button className="w-full h-14 rounded-full bg-primary shadow-elegant hover:scale-105 transition-all text-lg font-bold">
-                    Add New Resource <ChevronRight className="ml-2 h-5 w-5" />
-                  </Button>
+                  <AddMaterialDialog
+                    isUserContribution={true}
+                    trigger={
+                      <Button className="w-full h-14 rounded-full bg-primary shadow-elegant hover:scale-105 transition-all text-lg font-bold">
+                        Add New Resource <ChevronRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    }
+                  />
                 </CardContent>
                 <div className="absolute bottom-4 right-6 text-[10px] text-primary/50 font-bold uppercase tracking-widest flex items-center gap-1.5">
                   <Shield className="h-3 w-3" /> Community Verified

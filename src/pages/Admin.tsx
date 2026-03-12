@@ -1,24 +1,21 @@
 import { useState } from 'react'
 import { 
-  Plus, 
   Trash2, 
   Edit3, 
   Search, 
-  LayoutGrid, 
   List, 
   Loader2,
-  CheckCircle2,
   AlertCircle
 } from 'lucide-react'
 import { 
   useMaterials, 
-  useCreateMaterial, 
   useDeleteMaterial 
 } from '@/hooks/useMaterials'
 import { useAuth } from '@/hooks/useAuth'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
@@ -27,38 +24,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+import { AddMaterialDialog } from '@/components/materials/AddMaterialDialog'
 import { toast } from 'sonner'
 
 export default function Admin() {
-  const { user, isAdmin } = useAuth()
+  const { isAdmin } = useAuth()
   const { data: materialsList, isLoading } = useMaterials()
-  const createMaterial = useCreateMaterial()
   const deleteMaterial = useDeleteMaterial()
 
-  const [isAdding, setIsAdding] = useState(false)
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    url: '',
-    type: 'document' as 'document' | 'video' | 'link',
-    category: 'General'
-  })
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this material?')) {
+      try {
+        await deleteMaterial.mutateAsync(id)
+        toast.success('Material deleted successfully')
+      } catch (error) {
+        toast.error('Failed to delete material')
+      }
+    }
+  }
 
   if (!isAdmin) {
     return (
@@ -78,40 +61,6 @@ export default function Admin() {
     )
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user) return
-
-    try {
-      await createMaterial.mutateAsync({
-        input: formData,
-        userId: user.id
-      })
-      toast.success('Material added successfully!')
-      setIsAdding(false)
-      setFormData({
-        title: '',
-        description: '',
-        url: '',
-        type: 'document',
-        category: 'General'
-      })
-    } catch (error) {
-      toast.error('Failed to add material. Please try again.')
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this material?')) {
-      try {
-        await deleteMaterial.mutateAsync(id)
-        toast.success('Material deleted successfully')
-      } catch (error) {
-        toast.error('Failed to delete material')
-      }
-    }
-  }
-
   return (
     <DashboardLayout>
       <div className="space-y-8 animate-fade-in">
@@ -121,91 +70,14 @@ export default function Admin() {
             <p className="text-muted-foreground">Manage your knowledge base and materials.</p>
           </div>
 
-          <Dialog open={isAdding} onOpenChange={setIsAdding}>
-            <DialogTrigger asChild>
+          <AddMaterialDialog
+            isUserContribution={false}
+            trigger={
               <Button className="rounded-full shadow-elegant bg-primary hover:bg-primary/90">
-                <Plus className="mr-2 h-5 w-5" /> Add New Material
+                Add New Material
               </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] rounded-3xl bg-background/95 backdrop-blur-xl border-primary/10 shadow-2xl">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-serif font-bold">New Material</DialogTitle>
-                <p className="text-sm text-muted-foreground">Add a resource to the Wise Learn catalog.</p>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-primary/80 ml-1">Material Title</label>
-                  <Input 
-                    placeholder="E.g. Advanced TypeScript Patterns" 
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    required
-                    className="rounded-xl border-primary/20 bg-primary/5 focus-visible:ring-primary shadow-sm"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-primary/80 ml-1">Type</label>
-                    <Select 
-                      value={formData.type} 
-                      onValueChange={(val: any) => setFormData({...formData, type: val})}
-                    >
-                      <SelectTrigger className="rounded-xl border-primary/20 bg-primary/5">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="document">Document (PDF)</SelectItem>
-                        <SelectItem value="video">Video</SelectItem>
-                        <SelectItem value="link">External Link</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-primary/80 ml-1">Category</label>
-                    <Input 
-                      placeholder="E.g. Engineering" 
-                      value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="rounded-xl border-primary/20 bg-primary/5"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-primary/80 ml-1">URL / Source</label>
-                  <Input 
-                    placeholder="https://..." 
-                    value={formData.url}
-                    onChange={(e) => setFormData({...formData, url: e.target.value})}
-                    required
-                    className="rounded-xl border-primary/20 bg-primary/5"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-primary/80 ml-1">Description</label>
-                  <Textarea 
-                    placeholder="Briefly explain what this resource covers..." 
-                    className="h-24 resize-none rounded-xl border-primary/20 bg-primary/5"
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  />
-                </div>
-                <DialogFooter className="pt-4">
-                  <Button 
-                    type="submit" 
-                    className="w-full rounded-xl h-12 bg-primary shadow-elegant"
-                    disabled={createMaterial.isPending}
-                  >
-                    {createMaterial.isPending ? (
-                      <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                    ) : (
-                      <CheckCircle2 className="h-5 w-5 mr-2" />
-                    )}
-                    Publish to Catalog
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+            }
+          />
         </div>
 
         <div className="bg-background/60 backdrop-blur-md rounded-3xl border border-border/50 shadow-sm overflow-hidden">
